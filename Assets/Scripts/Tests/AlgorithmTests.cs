@@ -127,11 +127,11 @@ namespace DeckUtilities.Tests
                 {
                     uniqueInputSets++;
                     fullTableProbabilities = ComboProbabilityUtilities.CalculateComboProbabilities(deckSize, cardGroups, comboGroups,
-                        ComboProbabilityUtilities.AlgorithmVersion.FullTable).probabilitySets;
+                        ComboProbabilityUtilities.AlgorithmVariant.FullTable).probabilitySets;
                     croppedTableProbabilities = ComboProbabilityUtilities.CalculateComboProbabilities(deckSize, cardGroups, comboGroups,
-                        ComboProbabilityUtilities.AlgorithmVersion.CroppedTable).probabilitySets;
+                        ComboProbabilityUtilities.AlgorithmVariant.CroppedTable).probabilitySets;
                     optimizedProbabilities = ComboProbabilityUtilities.CalculateComboProbabilities(deckSize, cardGroups, comboGroups,
-                        ComboProbabilityUtilities.AlgorithmVersion.Optimized).probabilitySets;
+                        ComboProbabilityUtilities.AlgorithmVariant.Optimized).probabilitySets;
                 }
             }
             Debug.Log($"Unique input sets: {uniqueInputSets}");
@@ -190,9 +190,9 @@ namespace DeckUtilities.Tests
                 optimizedExecutionTimes.Add(result.optimizedExecutionTimes);
             }
 
-            LogExecutionTimesSummary(fullTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVersion.FullTable);
-            LogExecutionTimesSummary(croppedTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVersion.CroppedTable);
-            LogExecutionTimesSummary(optimizedExecutionTimes, ComboProbabilityUtilities.AlgorithmVersion.Optimized);
+            LogExecutionTimesSummary(fullTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVariant.FullTable);
+            LogExecutionTimesSummary(croppedTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVariant.CroppedTable);
+            LogExecutionTimesSummary(optimizedExecutionTimes, ComboProbabilityUtilities.AlgorithmVariant.Optimized);
         }
 
         /// <summary>
@@ -223,12 +223,12 @@ namespace DeckUtilities.Tests
                 croppedTableExecutionTimes.Add(task.Result.croppedTableExecutionTime);
                 optimizedExecutionTimes.Add(task.Result.optimizedExecutionTimes);
             }
-            LogExecutionTimesSummary(fullTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVersion.FullTable);
-            LogExecutionTimesSummary(croppedTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVersion.CroppedTable);
-            LogExecutionTimesSummary(optimizedExecutionTimes, ComboProbabilityUtilities.AlgorithmVersion.Optimized);
+            LogExecutionTimesSummary(fullTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVariant.FullTable);
+            LogExecutionTimesSummary(croppedTableExecutionTimes, ComboProbabilityUtilities.AlgorithmVariant.CroppedTable);
+            LogExecutionTimesSummary(optimizedExecutionTimes, ComboProbabilityUtilities.AlgorithmVariant.Optimized);
         }
 
-        void LogExecutionTimesSummary (List<double> executionTimes, ComboProbabilityUtilities.AlgorithmVersion algorithmVersion)
+        void LogExecutionTimesSummary (List<double> executionTimes, ComboProbabilityUtilities.AlgorithmVariant algorithmVersion)
         {
             executionTimes.Sort();
             double total = 0;
@@ -279,7 +279,7 @@ namespace DeckUtilities.Tests
                                             {
                                                 comboGroups[0]._requiredCount[3] = cd;
                                                 ComboProbabilityUtilities.CalculateComboProbabilities(deckSize, cardGroups, comboGroups,
-                                                    ComboProbabilityUtilities.AlgorithmVersion.FullTable);
+                                                    ComboProbabilityUtilities.AlgorithmVariant.FullTable);
                                             }
                                         }
                                     }
@@ -319,7 +319,7 @@ namespace DeckUtilities.Tests
                                             {
                                                 comboGroups[0]._requiredCount[3] = cd;
                                                 ComboProbabilityUtilities.CalculateComboProbabilities(deckSize, cardGroups, comboGroups,
-                                                    ComboProbabilityUtilities.AlgorithmVersion.CroppedTable);
+                                                    ComboProbabilityUtilities.AlgorithmVariant.CroppedTable);
                                             }
                                         }
                                     }
@@ -359,7 +359,7 @@ namespace DeckUtilities.Tests
                                             {
                                                 comboGroups[0]._requiredCount[3] = cd;
                                                 ComboProbabilityUtilities.CalculateComboProbabilities(deckSize, cardGroups, comboGroups,
-                                                    ComboProbabilityUtilities.AlgorithmVersion.Optimized);
+                                                    ComboProbabilityUtilities.AlgorithmVariant.Optimized);
                                             }
                                         }
                                     }

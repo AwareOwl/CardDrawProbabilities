@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace DeckUtilities.Tests
 {
+    /// <summary>
+    /// An input test for the algorithm that can used by Unity tests.
+    /// </summary>
     [CreateAssetMenu(fileName = "ComboProbabilityTestData", menuName = "Scriptable Objects/ComboProbabilityTestData")]
     public class ComboProbabilityTestData : ScriptableObject
     {

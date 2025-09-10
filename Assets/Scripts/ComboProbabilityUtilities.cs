@@ -6,7 +6,14 @@ namespace DeckUtilities
 
     public class ComboProbabilityUtilities
     {
-        public enum AlgorithmVersion
+
+        /// <summary>
+        /// Algorithm variant. Each variant returns an extra data array: 
+        /// Full table - it returns the table of possible sequences of each draw combination.The first dimension represents the number of the drawn cards. Other N dimensions represent the N different card groups. It's great for making charts, as it contains every possible data;
+        /// Cropped table - similar to the full table, but the dimensions represeting card groups have bounds equal to the max expected value in corresponding card groups.For example, if the first card group contains 10 cards, but player only needs 2 of them, then the corresponding array will have legnth 3. The values not fitting the bounds are merged with corresponding edge cells of the array, which can be interpreted as a sufix sum;
+        /// Optimized - it returns a one-dimensional table, containing only the data from the last needed card draw. It's the most performant.
+        /// </summary>
+        public enum AlgorithmVariant
         {
             FullTable,
             CroppedTable,
@@ -17,26 +24,27 @@ namespace DeckUtilities
         /// Calculates the number of sequences that fulfill combo criteria for each distinguish card draw combination.
         /// </summary>
         /// <param name="deckSize">The number of cards in deck.</param>
-        /// <param name="cardGroups">Card types in the deck.</param>
-        /// <param name="comboGroups">Combos that require a certain number of cards from each group to fulfill the criteria.</param>
-        /// <param name="algorithmVersion">Version of the algorithm.
-        /// FullTable returns a full multidimensional array for each scenario until the final draw.
-        /// CroppedTable crops to the bounding bounds of combos. The values at the bounds are increased by the cropped values.
-        /// Optimized algorithm returns scenarios from the last draw in a form of 1-dimensional array.</param>
-        public static (ProbabilitySet[] probabilitySets, object data) CalculateComboProbabilities(uint deckSize, CardGroup[] cardGroups, ComboGroup[] comboGroups, AlgorithmVersion algorithmVersion = AlgorithmVersion.Optimized)
+        /// <param name="cardGroups">Card quantitites for each relevant card type in the deck.</param>
+        /// <param name="comboGroups">Combos that require a certain number of cards from each group by a certain turn to fulfill the criteria.</param>
+        /// <param name="algorithmVariant">Algorithm variant. Each variant returns an extra data array: 
+        /// Full table - it returns the table of possible sequences of each draw combination.The first dimension represents the number of the drawn cards. Other N dimensions represent the N different card groups. It's great for making charts, as it contains every possible data;
+        /// Cropped table - similar to the full table, but the dimensions represeting card groups have bounds equal to the max expected value in corresponding card groups.For example, if the first card group contains 10 cards, but player only needs 2 of them, then the corresponding array will have legnth 3. The values not fitting the bounds are merged with corresponding edge cells of the array, which can be interpreted as a sufix sum;
+        /// Optimized - it returns a one-dimensional table, containing only the data from the last needed card draw. It's the most performant.</param>
+        /// <returns>An array of probability sets, where each probability set corresponds one card combination (e.g., 1 card B and 1 card C by the 9th draw). In each probability set, you can find alias of the card combination, and probabilities of it happening during each turn. Keep in mind that probabilities use AND logic - all combinations that do not fulfill previously checked restriction will be cut out.</returns>
+        public static (ProbabilitySet[] probabilitySets, object data) CalculateComboProbabilities(uint deckSize, CardGroup[] cardGroups, ComboGroup[] comboGroups, AlgorithmVariant algorithmVariant = AlgorithmVariant.Optimized)
         {
             // Initial validation
             if (comboGroups.Length > 4)
             {
-                Debug.LogError("This algorithm doesn't support more than 4 combo groups.");
+                throw new Exception("This algorithm doesn't support more than 4 combo groups.");
             }
-            switch (algorithmVersion)
+            switch (algorithmVariant)
             {
-                case AlgorithmVersion.FullTable:
+                case AlgorithmVariant.FullTable:
                     return CalculateComboProbabilitiesFullTable();
-                case AlgorithmVersion.CroppedTable:
+                case AlgorithmVariant.CroppedTable:
                     return CalculateComboProbabilitiesCroppedTable();
-                case AlgorithmVersion.Optimized:
+                case AlgorithmVariant.Optimized:
                     return CalculateComboProbabilitiesOptimized();
                 default:
                     return CalculateComboProbabilitiesOptimized();

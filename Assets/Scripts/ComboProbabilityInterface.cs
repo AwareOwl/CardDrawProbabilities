@@ -1,11 +1,13 @@
 using DeckUtilities.Tests;
-using System;
-using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
 namespace DeckUtilities
 {
+    /// <summary>
+    /// An MonoBehaviour that can be use to configure tests from the Inspector window.
+    /// </summary>
     public class ComboProbabilityInterface : MonoBehaviour
     {
         [SerializeField] uint _deckSize = 10;
@@ -20,8 +22,15 @@ namespace DeckUtilities
         [ContextMenu ("CalculateProbabilites")]
         public void CalculateComboProbabilities()
         {
-            ComboProbabilityUtilities.CalculateComboProbabilities(_deckSize, _cardGroups, _comboGroups, ComboProbabilityUtilities.AlgorithmVersion.FullTable);
-            ComboProbabilityUtilities.CalculateComboProbabilities(_deckSize, _cardGroups, _comboGroups, ComboProbabilityUtilities.AlgorithmVersion.Optimized);
+            var output = ComboProbabilityUtilities.CalculateComboProbabilities(_deckSize, _cardGroups, _comboGroups, ComboProbabilityUtilities.AlgorithmVariant.Optimized);
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var probabilitySet in output.probabilitySets)
+            {
+                stringBuilder.Append($"Set: {probabilitySet._setName.ToString()}{System.Environment.NewLine}");
+                foreach (var probabilityByDraw in probabilitySet._probabilitiesByDraw)
+                    stringBuilder.Append(probabilityByDraw.ToString() + System.Environment.NewLine);
+            }
+            Debug.Log (stringBuilder.ToString());
         }
 
 #if UNITY_EDITOR
